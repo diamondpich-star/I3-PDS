@@ -1,9 +1,25 @@
 # ATM Cash Withdrawal System
-moneys = [100, 50, 20, 10, 5, 1]
-quantity = [50, 20, 300, 0, 200, 10]
+money = {
+    100: 50,
+    50: 20,
+    20: 300,
+    10: 0,
+    5: 200,
+    1: 10
+}
+amount = int(input("Enter amount: $"))
+if amount <= 0:
+    print("Invalid amount!")
+else:
+    for bill in money:
+        count = min(amount // bill, money[bill])
+        if count > 0:
+            print("$", bill, "x", count)
+            amount = amount - (bill * count)
+            money[bill] = money[bill] - count
+    if amount == 0:
+        print("Withdrawal successful!")
+    else:
+        print("Not enough money in ATM!")
+        print("Remaining amount:", amount)
 
-# Calculate total money
-total_money = 0
-
-for i in range(len(moneys)):
-    print()
