@@ -1,41 +1,46 @@
-# ====== Problem 9. Electricity Bill with Progressive Tiers =====
+# ====== Problem 10. Prime numbers and Goldbach's conjecture =====
 
-# (a) Calculate electricity bill
-def electricity_bill(kwh):
-    if kwh < 0:
-        return None
+# (a) Write is_prime(n). A prime is a whole number ≥ 2 whose only divisors are 1 and itself. For speed, only test divisors d while d * d <= n.
+def is_prime(n):
+    """True when n is a prime number. Tests divisors up to the square root."""
+    if n < 2:
+        return False
+    d = 2
+    while d * d <= n:
+        if n % d == 0:
+            return False
+        d += 1
+    return True
 
-    # Calculate kWh in each tier
-    tier1 = min(kwh, 50)
-    tier2 = min(max(kwh - 50, 0), 150)
-    tier3 = max(kwh - 200, 0)
+# (b) Print all primes below 50 on one line (use print(..., end=" ")), then count the primes below 100.
+print("\nPrimes below 50:", end=" ")
+count = 0
+for n in range(50):
+    if is_prime(n):
+        print(n, end=" ")
+for n in range(100):
+    if is_prime(n):
+        count += 1
+print("\nNumber of primes below 100:", count)
 
-    # Calculate electricity cost
-    cost = (tier1 * 480) + (tier2 * 610) + (tier3 * 730)
+# (c) Goldbach's conjecture
+def goldbach(n):
+    """Return the first pair of primes (p, q) with p + q == n, or None."""
+    for p in range(2, n // 2 + 1):
+        if is_prime(p) and is_prime(n - p):
+            return p, n - p
+    return None
 
-    # Add service fee and VAT
-    total = (cost + 2000) * 1.10
 
-    return round(total)
+for n in range(4, 31, 2):
+    p, q = goldbach(n)
+    print(f"{n} = {p} + {q}")
 
-
-# (b) Print electricity bill table
-print("Electricity Bill Table")
-
-for kwh in [0, 35, 50, 120, 200, 350]:
-    bill = electricity_bill(kwh)
-    usd = bill / 4100
-
-    print(f"{kwh} kWh -> {bill:,} riel (≈ {usd:.2f} USD)")
-
-# (c) Ask user for monthly consumption
-print()
-kwh = float(input("Enter your monthly consumption (kWh): "))
-
-bill = electricity_bill(kwh)
-
-if bill is None:
-    print("Invalid consumption!")
-else:
-    usd = bill / 4100
-    print(f"Your electricity bill: {bill:,} riel (≈ {usd:.2f} USD)")
+# (d) Use a loop with break to check the conjecture for every even number from 4 to 10,000.
+all_ok = True
+for n in range(4, 10001, 2):
+    if goldbach(n) is None:
+        all_ok = False
+        print("Counter-example:", n)
+        break
+print("Goldbach holds for every even number from 4 to 10000:", all_ok)
